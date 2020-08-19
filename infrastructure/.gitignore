@@ -1,0 +1,14 @@
+*.js
+!.prettierrc.js
+!.eslintrc.js
+!jest.config.js
+*.d.ts
+
+build/
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+# Parcel default cache directory
+.parcel-cache

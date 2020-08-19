@@ -1,0 +1,16 @@
+{
+    "logFormat": "json",
+    "kafka": {
+        "sasl": {
+            "username": null,
+            "password": null,
+            "mechanism": "plain"
+        },
+        "ssl": true
+    },
+    "sentry": {
+        "dsn": null,
+        "enabled": true,
+        "environment": "production"
+    }
+}

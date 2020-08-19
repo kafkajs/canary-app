@@ -1,0 +1,15 @@
+{
+    "server": {
+        "port": "PORT"
+    },
+    "kafka": {
+        "host": "KAFKA_HOST",
+        "sasl": {
+            "username": "KAFKA_USERNAME",
+            "password": "KAFKA_PASSWORD"
+        }
+    },
+    "sentry": {
+        "dsn": "SENTRY_DSN"
+    }
+}

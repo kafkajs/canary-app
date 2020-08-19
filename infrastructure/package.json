@@ -1,0 +1,44 @@
+{
+  "name": "kafkajs-canary-app-infrastructure",
+  "version": "0.1.0",
+  "bin": {
+    "infrastructure": "bin/kafkajs-canary.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "synth": "npm run cdk -- synth",
+    "diff": "npm run cdk -- diff",
+    "deploy": "npm run cdk -- deploy",
+    "lint": "eslint '*/**/*.ts'",
+    "format": "prettier --write '*/**/*.ts'"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.59.0",
+    "@aws-cdk/aws-logs": "^1.59.0",
+    "@aws-cdk/aws-ssm": "^1.59.0",
+    "@types/jest": "^26.0.4",
+    "@types/node": "10.17.27",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "aws-cdk": "1.59.0",
+    "cdk": "^1.59.0",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.0.4",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.1.3",
+    "ts-node": "^8.1.0",
+    "typescript": "~3.9.6"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-ec2": "^1.59.0",
+    "@aws-cdk/aws-ecr": "^1.59.0",
+    "@aws-cdk/aws-ecs": "^1.59.0",
+    "@aws-cdk/core": "1.59.0",
+    "source-map-support": "^0.5.16"
+  }
+}
