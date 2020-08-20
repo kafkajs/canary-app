@@ -1,14 +1,22 @@
+import http from 'http';
 import { createApp } from './app';
 import config from 'config';
 
 const port: number = config.get('server.port');
 
 export async function main(): Promise<void> {
-  const { app, start, stop, logger } = createApp();
+  const { start, stop, logger } = createApp();
 
   try {
     await start();
-    const server = await app.listen(port, '0.0.0.0', () => {
+
+    const requestListener: http.RequestListener = function (_, res) {
+      res.writeHead(200);
+      res.end();
+    };
+
+    const server = http.createServer(requestListener);
+    server.listen(port, '0.0.0.0', () => {
       logger.info(`HTTP server listening on 0.0.0.0:${port}`);
     });
 

@@ -1,4 +1,3 @@
-import express, { Express } from 'express';
 import * as Sentry from '@sentry/node';
 import { Kafka, KafkaConfig } from 'kafkajs';
 import { KafkaProducer, KafkaProducerParameters } from './producer';
@@ -8,14 +7,12 @@ import { createLogger } from './lib/logger';
 import { KafkaConsumerProps, KafkaConsumer } from './consumer';
 
 export interface AppResources {
-  app: Express;
   start: () => Promise<void>;
   stop: () => Promise<void>;
   logger: ILogger;
 }
 
 export const createApp = (): AppResources => {
-  const app = express();
   const logLevel = LogLevel[config.get('logLevel') as keyof typeof LogLevel];
   const logger = createLogger(logLevel);
 
@@ -49,5 +46,5 @@ export const createApp = (): AppResources => {
     await Promise.all([producer.stop(), consumer.stop()]);
   };
 
-  return { app, start, stop, logger };
+  return { start, stop, logger };
 };
