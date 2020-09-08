@@ -21,7 +21,7 @@
     "topic": "test-topic",
     "minDuration": 20,
     "maxDuration": 50,
-    "errorChance": 0.01
+    "errorChance": 0.001
   },
   "sentry": {
     "enabled": false,
