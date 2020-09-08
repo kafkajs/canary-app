@@ -56,7 +56,7 @@ export class KafkaJSCanaryStack extends cdk.Stack {
 
     new KafkaJSCanaryAppFargateService(this, 'App', {
       cluster,
-      desiredTaskCount: 1,
+      desiredTaskCount: 2,
       image: ecs.ContainerImage.fromEcrRepository(props.registry, imageTag.valueAsString),
       environment,
       secrets,
