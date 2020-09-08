@@ -6,6 +6,7 @@ A simple producer-consumer that is intended to try out beta versions of KafkaJS.
 
 ```sh
 $ npm install
+$ source .env
 $ npm start
 ```
 
