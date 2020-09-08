@@ -41,12 +41,13 @@ export function toKafkaJSLogLevel(level: LogLevel): KafkaJSLogLevel {
   switch (level) {
     case LogLevel.DEBUG:
       return KafkaJSLogLevel.DEBUG;
-    case LogLevel.INFO:
-      return KafkaJSLogLevel.INFO;
     case LogLevel.WARN:
       return KafkaJSLogLevel.WARN;
     case LogLevel.ERROR:
       return KafkaJSLogLevel.ERROR;
+    case LogLevel.INFO:
+    default:
+      return KafkaJSLogLevel.INFO;
   }
 }
 
@@ -56,10 +57,11 @@ const toWinstonLogLevel = (level: LogLevel) => {
       return 'error';
     case LogLevel.WARN:
       return 'warn';
-    case LogLevel.INFO:
-      return 'info';
     case LogLevel.DEBUG:
       return 'debug';
+    case LogLevel.INFO:
+    default:
+      return 'info';
   }
 };
 
