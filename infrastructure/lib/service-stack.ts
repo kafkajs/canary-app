@@ -17,7 +17,7 @@ export class KafkaJSCanaryStack extends cdk.Stack {
     super(scope, id, props);
 
     const vpc = new ec2.Vpc(this, 'AppVPC', {
-      maxAzs: 3,
+      maxAzs: 2,
     });
 
     const cluster = new ecs.Cluster(this, 'AppCluster', {
