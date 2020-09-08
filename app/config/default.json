@@ -1,26 +1,30 @@
 {
-    "logLevel": "INFO",
-    "logFormat": "pretty",
-    "server": {
-        "port": 3000
-    },
-    "kafka": {
-        "clientId": "kafkajs-canary-app",
-        "host": "localhost:9092",
-        "sasl": false,
-        "ssl": false
-    },
-    "producer": {
-        "topic": "test-topic",
-        "interval": 10000,
-        "numberOfMessages": 3
-    },
-    "consumer": {
-        "groupId": "kafkajs-canary-app",
-        "topic": "test-topic"
-    },
-    "sentry": {
-        "enabled": false,
-        "environment": "local"
-    }
+  "logLevel": "INFO",
+  "logFormat": "pretty",
+  "server": {
+    "port": 3000
+  },
+  "kafka": {
+    "clientId": "kafkajs-canary-app",
+    "host": "localhost:9092",
+    "sasl": false,
+    "ssl": false
+  },
+  "producer": {
+    "topic": "test-topic",
+    "interval": 10000,
+    "minMessages": 1,
+    "maxMessages": 50
+  },
+  "consumer": {
+    "groupId": "kafkajs-canary-app",
+    "topic": "test-topic",
+    "minDuration": 20,
+    "maxDuration": 50,
+    "errorChance": 0.01
+  },
+  "sentry": {
+    "enabled": false,
+    "environment": "local"
+  }
 }

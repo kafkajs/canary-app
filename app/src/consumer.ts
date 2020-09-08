@@ -1,10 +1,15 @@
 import { Kafka, Consumer } from 'kafkajs';
 import * as Sentry from '@sentry/node';
 import { ILogger } from './lib/logger';
+import { sleep } from './lib/sleep';
+import { FailedOnPurpose } from './errors';
 
 export interface KafkaConsumerProps {
   groupId: string;
   topic: string;
+  minDuration: number;
+  maxDuration: number;
+  errorChance: number;
 }
 
 export class KafkaConsumer {
@@ -34,6 +39,8 @@ export class KafkaConsumer {
     await this.consumer.run({
       partitionsConsumedConcurrently: 2,
       eachMessage: async ({ topic, partition, message }) => {
+        const { maxDuration: max, minDuration: min, errorChance } = this.options;
+        const sleepDuration = Math.floor(Math.random() * (max - min + 1)) + min;
         Sentry.addBreadcrumb({
           message: 'Consuming message',
           data: {
@@ -43,8 +50,13 @@ export class KafkaConsumer {
           },
         });
 
+        await sleep(sleepDuration);
+        if (Math.random() <= errorChance) {
+          throw new FailedOnPurpose('Randomly induced error while consuming message');
+        }
+
         try {
-          this.logger.info('Consumed message', {
+          this.logger.debug('Consumed message', {
             topic,
             partition,
             event: JSON.parse(message.value.toString()),

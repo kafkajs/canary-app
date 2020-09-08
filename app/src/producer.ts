@@ -6,8 +6,18 @@ import { ILogger } from './lib/logger';
 export interface KafkaProducerParameters {
   topic: string;
   interval: number;
-  numberOfMessages: number;
+  minMessages: number;
+  maxMessages: number;
+  errorChance: number;
 }
+
+const createMessage = (i: number) => {
+  const template = [
+    `short-message-${i}`,
+    `Lorem ipsum ${i} dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud etemplateercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum`,
+  ];
+  return template[i % 2];
+};
 
 export class KafkaProducer {
   private readonly producer: Producer;
@@ -32,10 +42,13 @@ export class KafkaProducer {
   public run(onError: (error: Error) => Promise<void>): void {
     this.running = true;
 
-    (async () => {
+    const schedule = async () => {
+      const { maxMessages: max, minMessages: min, interval } = this.options;
       while (this.running) {
         try {
-          const response = await Promise.all([this.produce(), sleep(this.options.interval)]);
+          const numMessages = Math.floor(Math.random() * (max - min + 1)) + min;
+          this.logger.debug('Producing messages', numMessages);
+          const response = await Promise.all([this.produce(numMessages), sleep(interval)]);
           this.logger.debug('Produced messages', response);
         } catch (error) {
           try {
@@ -50,7 +63,9 @@ export class KafkaProducer {
           }
         }
       }
-    })();
+    };
+
+    schedule();
   }
 
   public async stop(): Promise<void> {
@@ -59,19 +74,12 @@ export class KafkaProducer {
     await this.disconnect();
   }
 
-  private async produce() {
-    const messages = [];
-
-    const date = new Date().toISOString();
-
-    for (let i = 0; i < this.options.numberOfMessages; i++) {
-      messages.push({
-        value: JSON.stringify({
-          message: `message-${i}`,
-          date,
-        }),
-      });
-    }
+  private async produce(numberOfMessages: number) {
+    const messages = Array(numberOfMessages)
+      .fill(null)
+      .map((_, i) => ({
+        value: JSON.stringify({ createAt: Date.now(), payload: createMessage(i) }),
+      }));
 
     return this.producer.send({
       topic: this.options.topic,
