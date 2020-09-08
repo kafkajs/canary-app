@@ -108,7 +108,7 @@ export class KafkaJSCanaryAppFargateService extends cdk.Construct {
 
     this.logDriver = new AwsLogDriver({
       streamPrefix: this.node.id,
-      logRetention: RetentionDays.ONE_MONTH,
+      logRetention: RetentionDays.ONE_WEEK,
     });
 
     this.taskDefinition = new FargateTaskDefinition(this, 'AppTaskDefinition', {
