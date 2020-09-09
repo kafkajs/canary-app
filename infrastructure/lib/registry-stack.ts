@@ -8,6 +8,13 @@ export class KafkaJSRegistryStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Just to work around a weird issue with dependent stacks.
+    // TODO: Figure out how to remove this.
+    new cdk.CfnParameter(this, 'version', {
+      type: 'String',
+      description: 'The label of the Docker image to deploy',
+    });
+
     const { registry } = new KafkaJSCanaryAppContainerRegistry(this, 'ContainerRegistry');
     this.registry = registry;
   }
