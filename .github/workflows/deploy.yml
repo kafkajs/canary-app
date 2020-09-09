@@ -50,14 +50,6 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
 
-      - name: Commit
-        env:
-          KAFKAJS_VERSION: ${{ github.event.inputs.kafkajs_version }}
-        run: |
-          git add app/package.json app/package-lock.json
-          git commit -m "Update KafkaJS to ${KAFKAJS_VERSION}"
-          git push origin master
-
       - name: Deploy to fargate
         env:
           IMAGE_TAG: '${{ github.event.inputs.kafkajs_version }}-${{ github.sha }}'
@@ -66,3 +58,11 @@ jobs:
           npm ci
           (cd src && npm ci)
           npm run deploy -- AppStack --parameters version=${IMAGE_TAG}
+
+      - name: Commit
+        env:
+          KAFKAJS_VERSION: ${{ github.event.inputs.kafkajs_version }}
+        run: |
+          git add app/package.json app/package-lock.json
+          git commit -m "Update KafkaJS to ${KAFKAJS_VERSION}"
+          git push origin master
