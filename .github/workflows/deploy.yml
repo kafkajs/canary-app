@@ -18,7 +18,7 @@ jobs:
       - name: Update KafkaJS
         env:
           KAFKAJS_VERSION: ${{ github.event.inputs.kafkajs_version }}
-        run: /
+        run: |
           cd kafkajs
           npm install --save kafkajs@${KAFKAJS_VERSION}
 
@@ -61,7 +61,7 @@ jobs:
       - name: Deploy to fargate
         env:
           IMAGE_TAG: '${{ github.event.inputs.kafkajs_version }}-${{ github.sha }}'
-        run: /
+        run: |
           cd infrastructure
           npm ci
           (cd src && npm ci)
