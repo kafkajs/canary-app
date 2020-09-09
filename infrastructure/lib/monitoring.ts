@@ -10,7 +10,6 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as subscriptions from '@aws-cdk/aws-sns-subscriptions';
 import { sync as commandExists } from 'command-exists';
 import { execSync } from 'child_process';
-import { IStringParameter } from '@aws-cdk/aws-ssm';
 
 export interface MonitoringProps {
   service: BaseService;
