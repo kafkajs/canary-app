@@ -6,6 +6,7 @@ import { KafkaJSCanaryAppFargateService } from './service';
 import { Repository } from '@aws-cdk/aws-ecr';
 import { Secret } from '@aws-cdk/aws-ecs';
 import { CfnParameter } from '@aws-cdk/core';
+import { KafkaJSMonitoring } from './monitoring';
 
 export interface KafkaJSCanaryStackProps extends cdk.StackProps {
   registry: Repository;
@@ -54,12 +55,16 @@ export class KafkaJSCanaryStack extends cdk.Stack {
       description: 'The label of the Docker image to deploy',
     });
 
-    new KafkaJSCanaryAppFargateService(this, 'App', {
+    const { service } = new KafkaJSCanaryAppFargateService(this, 'App', {
       cluster,
       desiredTaskCount: 2,
       image: ecs.ContainerImage.fromEcrRepository(props.registry, imageTag.valueAsString),
       environment,
       secrets,
+    });
+
+    new KafkaJSMonitoring(this, 'Monitoring', {
+      service,
     });
   }
 }
