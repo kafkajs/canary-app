@@ -70,3 +70,10 @@ jobs:
           git add app/package.json app/package-lock.json
           git commit -m "Update KafkaJS to ${KAFKAJS_VERSION}" || true
           git push origin master
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2.1.0
+        env:
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: 'Kafkajs canary app deployed ${{ github.event.inputs.kafkajs_version }}-${{ github.sha }}'
