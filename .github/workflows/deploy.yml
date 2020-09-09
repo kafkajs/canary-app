@@ -19,7 +19,7 @@ jobs:
         env:
           KAFKAJS_VERSION: ${{ github.event.inputs.kafkajs_version }}
         run: |
-          cd kafkajs
+          cd app
           npm install --save kafkajs@${KAFKAJS_VERSION}
 
       - name: Configure AWS credentials
