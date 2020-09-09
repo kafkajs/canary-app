@@ -1,13 +1,20 @@
+import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
 import * as sns from '@aws-cdk/aws-sns';
 import * as cloudwatch from '@aws-cdk/aws-cloudwatch';
 import { BaseService } from '@aws-cdk/aws-ecs';
-import { Duration } from '@aws-cdk/core';
+import { Duration, BundlingDockerImage } from '@aws-cdk/core';
 import { SnsAction } from '@aws-cdk/aws-cloudwatch-actions';
 import { HorizontalAnnotation, Color } from '@aws-cdk/aws-cloudwatch';
+import * as lambda from '@aws-cdk/aws-lambda';
+import * as subscriptions from '@aws-cdk/aws-sns-subscriptions';
+import { sync as commandExists } from 'command-exists';
+import { execSync } from 'child_process';
+import { IStringParameter } from '@aws-cdk/aws-ssm';
 
 export interface MonitoringProps {
   service: BaseService;
+  slackWebhookUrl: string;
 }
 
 export class KafkaJSMonitoring extends cdk.Construct {
@@ -21,8 +28,9 @@ export class KafkaJSMonitoring extends cdk.Construct {
     this.alertTopic = new sns.Topic(this, 'Alerts', { topicName: 'kafkajs-canary-app-alerts' });
 
     this.createAlarms();
-
     this.createDashboard();
+
+    this.createSlackNotifications(props.slackWebhookUrl);
   }
 
   private createAlarms(): cloudwatch.Alarm[] {
@@ -46,7 +54,10 @@ export class KafkaJSMonitoring extends cdk.Construct {
 
     const alarms = [cpuUtilization, memoryUtilization];
 
-    alarms.forEach((alarm: cloudwatch.Alarm) => alarm.addAlarmAction(new SnsAction(this.alertTopic)));
+    alarms.forEach((alarm: cloudwatch.Alarm) => {
+      alarm.addAlarmAction(new SnsAction(this.alertTopic));
+      alarm.addOkAction(new SnsAction(this.alertTopic));
+    });
 
     return alarms;
   }
@@ -76,6 +87,43 @@ export class KafkaJSMonitoring extends cdk.Construct {
     );
 
     return dashboard;
+  }
+
+  private createSlackNotifications(slackWebhookUrl: string) {
+    const srcDir = path.join(__dirname, '..', 'src');
+
+    const handler = new lambda.Function(this, 'SlackNotifications', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.fromAsset(srcDir, {
+        bundling: {
+          image: BundlingDockerImage.fromRegistry('node:12-alpine'),
+          command: ['sh', '-c', `NODE_ENV=production npm install && cp -r . /asset-output`],
+          user: 'root', // https://github.com/aws/aws-cdk/issues/8707,
+          local: {
+            tryBundle: (outputDir: string): boolean => {
+              if (commandExists('npm')) {
+                try {
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  execSync(`npm ci && cp -r . ${outputDir}`, { cwd: srcDir });
+                  return true;
+                } catch (error) {
+                  console.error(`Error during local bundling: ` + error);
+                  return false;
+                }
+              }
+
+              return false;
+            },
+          },
+        },
+      }),
+      handler: 'cloudwatch-to-slack.handler',
+      environment: {
+        UNENCRYPTED_HOOK_URL: slackWebhookUrl,
+      },
+    });
+
+    this.alertTopic.addSubscription(new subscriptions.LambdaSubscription(handler));
   }
 
   private buildGraphWidget(

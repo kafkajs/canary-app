@@ -1,8 +1,10 @@
 *.js
+!src/**/*.js
 !.prettierrc.js
 !.eslintrc.js
 !jest.config.js
 *.d.ts
+cdk.context.json
 
 build/
 

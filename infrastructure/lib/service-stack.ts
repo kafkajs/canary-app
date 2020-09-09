@@ -63,8 +63,14 @@ export class KafkaJSCanaryStack extends cdk.Stack {
       secrets,
     });
 
+    const slackWebhookUrl = ssm.StringParameter.valueFromLookup(
+      this,
+      `${props.parameterStorePrefix}/alarm-slack-webhook`,
+    );
+
     new KafkaJSMonitoring(this, 'Monitoring', {
       service,
+      slackWebhookUrl,
     });
   }
 }

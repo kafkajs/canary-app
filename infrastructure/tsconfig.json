@@ -25,6 +25,7 @@
     ]
   },
   "exclude": [
-    "cdk.out"
+    "cdk.out",
+    "src/"
   ]
 }

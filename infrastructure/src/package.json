@@ -1,0 +1,14 @@
+{
+  "name": "lambdas",
+  "version": "0.1.0",
+  "description": "",
+  "main": "cloudwatch-to-slack.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tommy Brunn <tommy.brunn@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lambda-cloudwatch-slack": "^0.4.0"
+  }
+}

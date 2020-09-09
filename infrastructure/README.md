@@ -11,8 +11,11 @@ This application is deployed using [`AWS CDK`](https://aws.amazon.com/cdk/) and 
 
 ### Prerequisites
 
+Ensure that you have `docker` available in your path, as it will be used for bundling assets.
+
 ```sh
 $ npm install
+$ (cd src && npm install)
 
 # Optionally install the AWS CLI
 $ brew install awscli
@@ -40,6 +43,7 @@ Before deploying the app, you need to create three parameters in AWS Parameter S
 1. `/kafkajs-canary-app/kafka-host` (`String`) - bootstrap Kafka broker. 
 2. `/kafkajs-canary-app/kafka-username` (`SecureString`) - SASL username
 3. `/kafkajs-canary-app/kafka-password` (`SecureString`) - SASL password.
+5. `/kafkajs-canary-app/alarm-slack-webhook` (`String`) - Slack webhook URL for sending monitoring alerts
 4. `/kafkajs-canary-app/sentry-dsn` (`SecureString`) - **Optional** A Sentry DSN for error reporting
 
 These can either be created through the AWS console or via the CLI:
@@ -54,6 +58,10 @@ $ aws ssm put-parameter \
     --name "/kafkajs-canary-app/kafka-password" \
     --value "Password" \
     --type "SecureString"
+$ aws ssm put-parameter \
+    --name "/kafkajs-canary-app/alarm-slack-webhook" \
+    --value "https://hooks.slack.com/services/ABC123/DEF456/h23bhj2b34jhlb2fs" \
+    --type String
 ```
 
 ### Pushing Docker image to registry
@@ -72,6 +80,8 @@ Login Succeeded
 # Normally we would push a version tag corresponding to the kafkajs version used.
 $ docker push <account-id>.dkr.ecr.<region>.amazonaws.com/kafkajs-canary-app:latest
 ```
+
+### 
 
 ### App Stack
 
