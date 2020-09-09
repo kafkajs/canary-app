@@ -68,5 +68,5 @@ jobs:
           KAFKAJS_VERSION: ${{ github.event.inputs.kafkajs_version }}
         run: |
           git add app/package.json app/package-lock.json
-          git commit -m "Update KafkaJS to ${KAFKAJS_VERSION}"
+          git commit -m "Update KafkaJS to ${KAFKAJS_VERSION}" || true
           git push origin master
