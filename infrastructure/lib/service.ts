@@ -11,6 +11,7 @@ import {
   PropagatedTagSource,
 } from '@aws-cdk/aws-ecs';
 import { RetentionDays } from '@aws-cdk/aws-logs';
+import { PolicyStatement } from '@aws-cdk/aws-iam';
 
 export interface KafkaJSCanaryAppFargateServiceProps {
   readonly serviceName?: string;
@@ -123,6 +124,11 @@ export class KafkaJSCanaryAppFargateService extends cdk.Construct {
       secrets: this.secrets,
       logging: this.logDriver,
     });
+
+    const allowPutMetrics = new PolicyStatement({
+      actions: ['cloudwatch:PutMetricData'],
+    });
+    this.taskDefinition.addToTaskRolePolicy(allowPutMetrics);
 
     this.service = new FargateService(this, 'AppFargateService', {
       cluster: props.cluster,
