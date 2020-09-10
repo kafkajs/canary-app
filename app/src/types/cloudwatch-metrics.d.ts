@@ -49,15 +49,9 @@ declare module 'cloudwatch-metrics' {
 
   export class Metric {
     constructor(namespace: string, units: MetricUnit, defaultDimensions?: Dimensions, options?: MetricOptions);
-    put(value: number, metricName: string, units?: MetricUnit, additionalDimensions?: Dimensions): void;
-    summaryPut(value: number, metricName: string, units?: MetricUnit, additionalDimensions?: Dimensions): void;
-    sample(
-      value: number,
-      metricName: string,
-      units: MetricUnit,
-      additionalDimensions: Dimensions,
-      sampleRate: number,
-    ): void;
+    put(value: number, metricName: string, additionalDimensions?: Dimensions): void;
+    summaryPut(value: number, metricName: string, additionalDimensions?: Dimensions): void;
+    sample(value: number, metricName: string, additionalDimensions: Dimensions, sampleRate: number): void;
     hasMetrics(): boolean;
     shutdown(): void;
   }
