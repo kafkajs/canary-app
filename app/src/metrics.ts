@@ -12,11 +12,13 @@ export class Metrics {
   private readonly enabled: boolean;
   private readonly defaultDimensions: Dimension[];
   private readonly namespacePrefix: string;
+  private readonly defaultMetricOptions: Partial<MetricOptions>;
 
   constructor(config: MetricsConfig) {
     this.enabled = config.enabled;
     this.namespacePrefix = config.namespace;
     this.defaultDimensions = config.defaultDimensions ?? [];
+    this.defaultMetricOptions = config.defaultMetricOptions ?? {};
 
     initialize({
       region: config.region,
@@ -31,7 +33,7 @@ export class Metrics {
   ): Metric {
     return new Metric(this.getNamespace(namespace), units, this.getDimensions(defaultDimensions), {
       enabled: this.enabled,
-      ...options,
+      ...this.getMetricOptions(options),
     });
   }
 
@@ -48,5 +50,9 @@ export class Metrics {
       }, {});
 
     return Object.entries(merged).map(([key, value]) => ({ Name: key, Value: value }));
+  }
+
+  private getMetricOptions(metricOptions: Partial<MetricOptions> = {}): Partial<MetricOptions> {
+    return Object.assign({}, this.defaultMetricOptions, metricOptions);
   }
 }

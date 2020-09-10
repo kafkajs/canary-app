@@ -87,7 +87,7 @@ export class KafkaConsumer {
     this.consumer.on(this.consumer.events.END_BATCH_PROCESS, ({ payload }) => {
       metricNamespace.put(payload.offsetLagLow, 'OffsetLag', [
         { Name: 'topic', Value: payload.topic },
-        { Name: 'partition', Value: payload.partition },
+        { Name: 'partition', Value: payload.partition.toString() },
       ]);
     });
 

@@ -27,8 +27,10 @@ export const createApp = (): AppResources => {
     defaultDimensions: Object.entries(metricOptions.defaultDimensions || {}).map(([Name, Value]) => ({ Name, Value })),
     defaultMetricOptions: {
       ...metricOptions.defaultMetricOptions,
-      sendCallback: (error) => {
-        logger.error('Failed to send Cloudwatch Metrics', { error });
+      sendCallback: (error: Error) => {
+        if (error != null) {
+          logger.error('Failed to send Cloudwatch Metrics', { error });
+        }
       },
     },
   });
