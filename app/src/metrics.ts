@@ -1,22 +1,22 @@
-import { initialize, Dimensions, MetricOptions, Metric, MetricUnit } from 'cloudwatch-metrics';
+import { initialize, Dimension, MetricOptions, Metric, MetricUnit } from 'cloudwatch-metrics';
 
 export interface MetricsConfig {
   region: string;
   namespace: string;
-  defaultDimensions?: Dimensions;
+  defaultDimensions?: Dimension[];
   defaultMetricOptions?: Partial<MetricOptions>;
   enabled: boolean;
 }
 
 export class Metrics {
   private readonly enabled: boolean;
-  private readonly defaultDimensions: Dimensions;
+  private readonly defaultDimensions: Dimension[];
   private readonly namespacePrefix: string;
 
   constructor(config: MetricsConfig) {
     this.enabled = config.enabled;
     this.namespacePrefix = config.namespace;
-    this.defaultDimensions = config.defaultDimensions ?? {};
+    this.defaultDimensions = config.defaultDimensions ?? [];
 
     initialize({
       region: config.region,
@@ -26,7 +26,7 @@ export class Metrics {
   public createNamespace(
     namespace: string,
     units: MetricUnit,
-    defaultDimensions?: Dimensions,
+    defaultDimensions?: Dimension[],
     options?: Partial<MetricOptions>,
   ): Metric {
     return new Metric(this.getNamespace(namespace), units, this.getDimensions(defaultDimensions), {
@@ -39,7 +39,14 @@ export class Metrics {
     return `${this.namespacePrefix}/${namespace}`;
   }
 
-  private getDimensions(metricDimensions: Dimensions = {}) {
-    return Object.assign({}, this.defaultDimensions, metricDimensions);
+  private getDimensions(metricDimensions: Dimension[] = []) {
+    const merged = this.defaultDimensions
+      .concat(metricDimensions)
+      .reduce<{ [key: string]: string }>((dimensions, { Name, Value }) => {
+        dimensions[Name] = Value;
+        return dimensions;
+      }, {});
+
+    return Object.entries(merged).map(([key, value]) => ({ Name: key, Value: value }));
   }
 }

@@ -39,8 +39,9 @@ declare module 'cloudwatch-metrics' {
     storageResolution?: number;
   }
 
-  export interface Dimensions {
-    [key: string]: string;
+  export interface Dimension {
+    Name: string;
+    Value: string;
   }
 
   export interface AwsConfig {
@@ -48,10 +49,10 @@ declare module 'cloudwatch-metrics' {
   }
 
   export class Metric {
-    constructor(namespace: string, units: MetricUnit, defaultDimensions?: Dimensions, options?: MetricOptions);
-    put(value: number, metricName: string, additionalDimensions?: Dimensions): void;
-    summaryPut(value: number, metricName: string, additionalDimensions?: Dimensions): void;
-    sample(value: number, metricName: string, additionalDimensions: Dimensions, sampleRate: number): void;
+    constructor(namespace: string, units: MetricUnit, defaultDimensions?: Dimension[], options?: MetricOptions);
+    put(value: number, metricName: string, additionalDimensions?: Dimension[]): void;
+    summaryPut(value: number, metricName: string, additionalDimensions?: Dimension[]): void;
+    sample(value: number, metricName: string, additionalDimensions: Dimension[], sampleRate: number): void;
     hasMetrics(): boolean;
     shutdown(): void;
   }
