@@ -15,8 +15,11 @@
   },
   "metrics": {
     "region": "AWS_REGION",
-    "defaultDimensions": {
-      "version": "APP_VERSION"
-    }
+    "defaultDimensions": [
+      {
+        "Name": "version",
+        "Value": "APP_VERSION"
+      }
+    ]
   }
 }

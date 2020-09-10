@@ -15,8 +15,11 @@
     },
     "metrics": {
         "enabled": true,
-        "defaultDimensions": {
-            "version": "app-version"
-        }
+        "defaultDimensions": [
+            {
+                "Name": "version",
+                "Value": "APP_VERSION"
+            }
+        ]
     }
 }
