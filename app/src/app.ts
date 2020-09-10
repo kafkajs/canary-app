@@ -13,13 +13,18 @@ export interface AppResources {
   logger: ILogger;
 }
 
+interface RawMetricsConfig extends Omit<MetricsConfig, 'defaultDimensions'> {
+  defaultDimensions?: { [key: string]: string };
+}
+
 export const createApp = (): AppResources => {
   const logLevel = LogLevel[config.get('logLevel') as keyof typeof LogLevel];
   const logger = createLogger(logLevel);
 
-  const metricOptions: MetricsConfig = config.get('metrics');
+  const metricOptions: RawMetricsConfig = config.get('metrics');
   const metrics = new Metrics({
     ...metricOptions,
+    defaultDimensions: Object.entries(metricOptions.defaultDimensions || {}).map(([Name, Value]) => ({ Name, Value })),
     defaultMetricOptions: {
       ...metricOptions.defaultMetricOptions,
       sendCallback: (error) => {

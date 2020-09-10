@@ -31,6 +31,9 @@
   "metrics": {
     "namespace": "kafkajs-canary-app",
     "enabled": false,
-    "region": "local"
+    "region": "local",
+    "defaultDimensions": {
+      "version": "local"
+    }
   }
 }
