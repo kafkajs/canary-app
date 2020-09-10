@@ -14,9 +14,6 @@
         "environment": "production"
     },
     "metrics": {
-        "enabled": true,
-        "defaultDimensions": {
-            "version": "APP_VERSION"
-        }
+        "enabled": true
     }
 }

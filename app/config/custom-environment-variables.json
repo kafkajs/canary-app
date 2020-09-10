@@ -14,9 +14,6 @@
     "dsn": "SENTRY_DSN"
   },
   "metrics": {
-    "region": "AWS_REGION",
-    "defaultDimensions": {
-      "version": "APP_VERSION"
-    }
+    "region": "AWS_REGION"
   }
 }
