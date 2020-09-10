@@ -1,4 +1,4 @@
-import { Kafka, Consumer } from 'kafkajs';
+import { Kafka, Consumer, ConsumerEndBatchProcessEvent } from 'kafkajs';
 import * as Sentry from '@sentry/node';
 import { ILogger } from './lib/logger';
 import { sleep } from './lib/sleep';
@@ -84,8 +84,8 @@ export class KafkaConsumer {
   private setupMetrics(): Metric {
     const metricNamespace = this.metrics.createNamespace('Consumer', MetricUnit.Count);
 
-    this.consumer.on(this.consumer.events.END_BATCH_PROCESS, ({ payload }) => {
-      metricNamespace.put(payload.offsetLagLow, 'OffsetLag', [
+    this.consumer.on(this.consumer.events.END_BATCH_PROCESS, ({ payload }: ConsumerEndBatchProcessEvent) => {
+      metricNamespace.put(parseInt(payload.offsetLagLow, 10), 'OffsetLag', [
         { Name: 'topic', Value: payload.topic },
         { Name: 'partition', Value: payload.partition.toString() },
       ]);
