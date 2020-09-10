@@ -78,7 +78,7 @@ export class KafkaConsumer {
 
   public async stop(): Promise<void> {
     await this.disconnect();
-    this.metricNamespace.shutdown();
+    this.metricNamespace?.shutdown();
   }
 
   private setupMetrics(): Metric {
