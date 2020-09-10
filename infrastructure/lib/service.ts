@@ -127,6 +127,7 @@ export class KafkaJSCanaryAppFargateService extends cdk.Construct {
 
     const allowPutMetrics = new PolicyStatement({
       actions: ['cloudwatch:PutMetricData'],
+      resources: ['*'],
     });
     this.taskDefinition.addToTaskRolePolicy(allowPutMetrics);
 
