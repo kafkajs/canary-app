@@ -85,10 +85,10 @@ export class KafkaConsumer {
     const metricNamespace = this.metrics.createNamespace('Consumer', MetricUnit.Count);
 
     this.consumer.on(this.consumer.events.END_BATCH_PROCESS, ({ payload }) => {
-      metricNamespace.put(payload.offsetLagLow, 'OffsetLag', {
-        topic: payload.topic,
-        partition: payload.partition,
-      });
+      metricNamespace.put(payload.offsetLagLow, 'OffsetLag', [
+        { Name: 'topic', Value: payload.topic },
+        { Name: 'partition', Value: payload.partition },
+      ]);
     });
 
     return metricNamespace;
