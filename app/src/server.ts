@@ -36,7 +36,7 @@ export async function main(): Promise<void> {
       });
     });
   } catch (error) {
-    logger.error('Encountered error during startup', { error });
+    logger.error('Encountered error during startup', { error: error.message || error, stack: error.stack });
     await stop();
     throw error;
   }
