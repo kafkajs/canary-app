@@ -25,6 +25,12 @@
   },
   "sentry": {
     "enabled": false,
-    "environment": "local"
+    "environment": "local",
+    "dsn": null
+  },
+  "metrics": {
+    "namespace": "kafkajs-canary-app",
+    "enabled": false,
+    "region": "local"
   }
 }

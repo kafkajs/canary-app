@@ -5,6 +5,7 @@ import config from 'config';
 import { LogLevel, toKafkaJSLogLevel, createKafkaJSLogger, ILogger } from './lib/logger';
 import { createLogger } from './lib/logger';
 import { KafkaConsumerProps, KafkaConsumer } from './consumer';
+import { Metrics, MetricsConfig } from './metrics';
 
 export interface AppResources {
   start: () => Promise<void>;
@@ -15,6 +16,17 @@ export interface AppResources {
 export const createApp = (): AppResources => {
   const logLevel = LogLevel[config.get('logLevel') as keyof typeof LogLevel];
   const logger = createLogger(logLevel);
+
+  const metricOptions: MetricsConfig = config.get('metrics');
+  const metrics = new Metrics({
+    ...metricOptions,
+    defaultMetricOptions: {
+      ...metricOptions.defaultMetricOptions,
+      sendCallback: (error) => {
+        logger.error('Failed to send Cloudwatch Metrics', { error });
+      },
+    },
+  });
 
   const kafkaConfig: KafkaConfig = {
     brokers: [config.get('kafka.host')],
@@ -31,7 +43,7 @@ export const createApp = (): AppResources => {
   const producer = new KafkaProducer(kafka, logger, producerConfig);
 
   const consumerConfig: KafkaConsumerProps = config.get('consumer');
-  const consumer = new KafkaConsumer(kafka, logger, consumerConfig);
+  const consumer = new KafkaConsumer(kafka, logger, metrics, consumerConfig);
 
   const start = async () => {
     await Promise.all([producer.connect(), consumer.connect()]);

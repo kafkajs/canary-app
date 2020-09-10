@@ -46,14 +46,16 @@ export class KafkaJSCanaryStack extends cdk.Stack {
       ),
     };
 
-    const environment = {
-      KAFKA_HOST: ssm.StringParameter.valueForStringParameter(this, `${props.parameterStorePrefix}/kafka-host`),
-    };
-
     const imageTag = new CfnParameter(this, 'version', {
       type: 'String',
       description: 'The label of the Docker image to deploy',
     });
+
+    const environment = {
+      KAFKA_HOST: ssm.StringParameter.valueForStringParameter(this, `${props.parameterStorePrefix}/kafka-host`),
+      AWS_REGION: this.region,
+      APP_VERSION: imageTag.valueAsString,
+    };
 
     const { service } = new KafkaJSCanaryAppFargateService(this, 'App', {
       cluster,

@@ -12,5 +12,11 @@
         "dsn": null,
         "enabled": true,
         "environment": "production"
+    },
+    "metrics": {
+        "enabled": true,
+        "defaultDimensions": {
+            "version": "app-version"
+        }
     }
 }

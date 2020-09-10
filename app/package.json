@@ -45,6 +45,7 @@
   "dependencies": {
     "@sentry/integrations": "^5.21.1",
     "@sentry/node": "^5.20.1",
+    "cloudwatch-metrics": "git://github.com:Nevon/cloudwatch-metrics.git#7a42978be70ec52cd957f0aad5b29770fcfd89a5",
     "config": "^3.3.1",
     "kafkajs": "^1.14.0-beta.1",
     "winston": "^3.3.3",

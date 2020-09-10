@@ -3,6 +3,8 @@ import * as Sentry from '@sentry/node';
 import { ILogger } from './lib/logger';
 import { sleep } from './lib/sleep';
 import { FailedOnPurpose } from './errors';
+import { Metrics } from './metrics';
+import { Metric, MetricUnit } from 'cloudwatch-metrics';
 
 export interface KafkaConsumerProps {
   groupId: string;
@@ -16,14 +18,17 @@ export class KafkaConsumer {
   private readonly consumer: Consumer;
   private readonly logger: ILogger;
   private readonly options: KafkaConsumerProps;
+  private readonly metrics: Metrics;
+  private metricNamespace: Metric;
 
-  constructor(kafka: Kafka, logger: ILogger, options: KafkaConsumerProps) {
+  constructor(kafka: Kafka, logger: ILogger, metrics: Metrics, options: KafkaConsumerProps) {
     this.consumer = kafka.consumer({
       groupId: options.groupId,
     });
 
     this.logger = logger;
     this.options = options;
+    this.metrics = metrics;
   }
 
   public async connect(): Promise<void> {
@@ -35,6 +40,8 @@ export class KafkaConsumer {
   }
 
   public async run(): Promise<void> {
+    this.metricNamespace = this.setupMetrics();
+
     await this.consumer.subscribe({ topic: this.options.topic, fromBeginning: true });
     await this.consumer.run({
       partitionsConsumedConcurrently: 2,
@@ -71,5 +78,19 @@ export class KafkaConsumer {
 
   public async stop(): Promise<void> {
     await this.disconnect();
+    this.metricNamespace.shutdown();
+  }
+
+  private setupMetrics(): Metric {
+    const metricNamespace = this.metrics.createNamespace('Consumer', MetricUnit.Count);
+
+    this.consumer.on(this.consumer.events.END_BATCH_PROCESS, ({ payload }) => {
+      metricNamespace.put(payload.offsetLagLow, 'OffsetLag', MetricUnit.Count, {
+        topic: payload.topic,
+        partition: payload.partition,
+      });
+    });
+
+    return metricNamespace;
   }
 }
