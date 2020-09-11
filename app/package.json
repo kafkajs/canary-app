@@ -47,7 +47,7 @@
     "@sentry/node": "^5.20.1",
     "cloudwatch-metrics": "^1.2.0",
     "config": "^3.3.1",
-    "kafkajs": "^1.14.0-beta.1",
+    "kafkajs": "^1.14.0-beta.2",
     "winston": "^3.3.3",
     "winston-console-format": "^1.0.8"
   }
