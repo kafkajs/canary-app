@@ -23,6 +23,7 @@ export class KafkaJSCanaryStack extends cdk.Stack {
 
     const cluster = new ecs.Cluster(this, 'AppCluster', {
       vpc,
+      containerInsights: true,
     });
 
     const secrets = {
