@@ -21,7 +21,7 @@ jobs:
           MAX_RETRIES: 7
         run: |
           cd app
-          ./scrips/retry.sh ${MAX_RETRIES} npm install --save kafkajs@${KAFKAJS_VERSION}
+          ./scripts/retry.sh ${MAX_RETRIES} npm install --save kafkajs@${KAFKAJS_VERSION}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
