@@ -18,9 +18,10 @@ jobs:
       - name: Update KafkaJS
         env:
           KAFKAJS_VERSION: ${{ github.event.inputs.kafkajs_version }}
+          MAX_RETRIES: 7
         run: |
           cd app
-          npm install --save kafkajs@${KAFKAJS_VERSION}
+          ./scrips/retry.sh ${MAX_RETRIES} npm install --save kafkajs@${KAFKAJS_VERSION}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
