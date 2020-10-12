@@ -1,5 +1,5 @@
 FROM node:12-alpine AS builder
-RUN apk update && apk add curl bash
+RUN apk update && apk add curl bash git
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
