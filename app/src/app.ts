@@ -42,6 +42,7 @@ export const createApp = (): AppResources => {
     sasl: config.get('kafka.sasl'),
     logLevel: toKafkaJSLogLevel(logLevel),
     logCreator: createKafkaJSLogger(logger),
+    connectionTimeout: config.get('kafka.connectionTimeout'),
   };
 
   const kafka = new Kafka(kafkaConfig);

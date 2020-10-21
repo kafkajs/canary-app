@@ -8,7 +8,8 @@
     "clientId": "kafkajs-canary-app",
     "host": "localhost:9092",
     "sasl": false,
-    "ssl": false
+    "ssl": false,
+    "connectionTimeout": 1000
   },
   "producer": {
     "topic": "test-topic",
