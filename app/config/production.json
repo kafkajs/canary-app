@@ -7,7 +7,7 @@
             "mechanism": "plain"
         },
         "ssl": true,
-        "connectionTimeout": 5000
+        "connectionTimeout": 15000
     },
     "sentry": {
         "dsn": null,
