@@ -6,7 +6,8 @@
             "password": null,
             "mechanism": "plain"
         },
-        "ssl": true
+        "ssl": true,
+        "connectionTimeout": 5000
     },
     "sentry": {
         "dsn": null,
