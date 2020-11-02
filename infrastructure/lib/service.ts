@@ -12,6 +12,7 @@ import {
 } from '@aws-cdk/aws-ecs';
 import { RetentionDays } from '@aws-cdk/aws-logs';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
+import { SubnetType } from '@aws-cdk/aws-ec2';
 
 export interface KafkaJSCanaryAppFargateServiceProps {
   readonly serviceName?: string;
@@ -141,6 +142,10 @@ export class KafkaJSCanaryAppFargateService extends cdk.Construct {
       propagateTags: props.propagateTags,
       enableECSManagedTags: props.enableECSManagedTags,
       platformVersion: props.platformVersion,
+      vpcSubnets: {
+        subnetType: SubnetType.PUBLIC
+      },
+      assignPublicIp: true
     });
   }
 }
