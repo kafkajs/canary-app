@@ -19,6 +19,12 @@ export class KafkaJSCanaryStack extends cdk.Stack {
 
     const vpc = new ec2.Vpc(this, 'AppVPC', {
       maxAzs: 2,
+      natGateways: 0,
+      subnetConfiguration: [{
+        name: 'Public',
+        subnetType: ec2.SubnetType.PUBLIC,
+        cidrMask: 22
+      }]
     });
 
     const cluster = new ecs.Cluster(this, 'AppCluster', {
