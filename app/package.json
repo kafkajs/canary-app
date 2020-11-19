@@ -47,7 +47,7 @@
     "@sentry/node": "^5.20.1",
     "cloudwatch-metrics": "github:nevon/cloudwatch-metrics#clear-summary-on-shutdown",
     "config": "^3.3.1",
-    "kafkajs": "^1.15.0-beta.25",
+    "kafkajs": "^1.15.0-beta.26",
     "winston": "^3.3.3",
     "winston-console-format": "^1.0.8"
   }
